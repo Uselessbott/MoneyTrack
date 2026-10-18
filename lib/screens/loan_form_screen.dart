@@ -244,13 +244,22 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
               trailing: const Icon(Icons.calendar_month),
               onTap: _pickStartDate,
             ),
+
+            // ---- Final due date: read-only ----
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Final due date'),
-              subtitle: Text(formatDate(dueDate)),
-              trailing: const Icon(Icons.event),
-              onTap: _pickDueDate,
+              subtitle: Text(
+                formatDate(dueDate),
+                style: TextStyle(color: Theme.of(context).colorScheme.outline),
+              ),
+              trailing: Icon(
+                Icons.lock_outline,
+                color: Theme.of(context).colorScheme.outline,
+                size: 20,
+              ),
             ),
+
             const Divider(),
             const SizedBox(height: 8),
             TextFormField(
@@ -379,29 +388,8 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
     });
   }
 
-  Future<void> _pickDueDate() async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: dueDate,
-      firstDate: startDate,
-      lastDate: DateTime(2100),
-    );
-
-    if (date == null) return;
-    setState(() => dueDate = date);
-  }
-
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
-
-    if (dueDate.isBefore(startDate)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Due date cannot be before start date.'),
-        ),
-      );
-      return;
-    }
 
     final totalAmount = double.tryParse(amountController.text.trim());
     if (totalAmount == null || totalAmount <= 0) return;
@@ -436,6 +424,9 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
     try {
       final title = titleController.text.trim();
       final note = noteController.text.trim();
+
+      // Ensure dueDate is mathematically correct
+      dueDate = addMonths(startDate, tenure);
 
       if (editing) {
         await widget.controller.updateLoan(

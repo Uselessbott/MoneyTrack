@@ -41,7 +41,7 @@ class AppController extends ChangeNotifier {
   }
 
   // ---------------------------------------------------------------------------
-  // TOTALS
+  // TOTALS & SORTING
   // ---------------------------------------------------------------------------
 
   double get totalSpent =>
@@ -63,22 +63,21 @@ class AppController extends ChangeNotifier {
   List<Loan> get unpaidLoans =>
       loans.where((loan) => !loan.isFullyPaid).toList();
 
-  List<Loan> get overdueLoans {
-    final today = dateOnly(DateTime.now());
-    return unpaidLoans.where((loan) {
-      final next = loan.nextUnpaidMonth;
-      if (next == null) return false;
-      return dateOnly(loan.dueDateForMonth(next)).isBefore(today);
-    }).toList();
-  }
-
-  List<Loan> get upcomingLoans {
-    final today = dateOnly(DateTime.now());
-    return unpaidLoans.where((loan) {
-      final next = loan.nextUnpaidMonth;
-      if (next == null) return false;
-      return !dateOnly(loan.dueDateForMonth(next)).isBefore(today);
-    }).toList();
+  /// All unpaid loans, sorted by their next unpaid installment date.
+  /// Earliest first.
+  List<Loan> get sortedUnpaidLoans {
+    final list = loans.where((loan) => !loan.isFullyPaid).toList();
+    list.sort((a, b) {
+      final aNext = a.nextUnpaidMonth;
+      final bNext = b.nextUnpaidMonth;
+      if (aNext == null && bNext == null) return 0;
+      if (aNext == null) return 1;
+      if (bNext == null) return -1;
+      final aDue = a.dueDateForMonth(aNext);
+      final bDue = b.dueDateForMonth(bNext);
+      return aDue.compareTo(bDue);
+    });
+    return list;
   }
 
   // ---------------------------------------------------------------------------

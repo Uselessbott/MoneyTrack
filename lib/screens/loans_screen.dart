@@ -41,25 +41,13 @@ class LoansScreen extends StatelessWidget {
           final entries = <_ListEntry>[];
           entries.add(const _ListEntry.stats());
 
-          if (controller.overdueLoans.isNotEmpty) {
-            entries.add(_ListEntry.section(
-              'Overdue',
-              controller.overdueLoans.length,
-            ));
-            for (final loan in controller.overdueLoans) {
-              entries.add(_ListEntry.loan(loan));
-            }
-          }
+          final sortedLoans = controller.sortedUnpaidLoans;
 
-          entries.add(_ListEntry.section(
-            'Upcoming',
-            controller.upcomingLoans.length,
-          ));
-
-          if (controller.upcomingLoans.isEmpty) {
+          if (sortedLoans.isEmpty) {
             entries.add(const _ListEntry.empty());
           } else {
-            for (final loan in controller.upcomingLoans) {
+            entries.add(_ListEntry.section('Loans', sortedLoans.length));
+            for (final loan in sortedLoans) {
               entries.add(_ListEntry.loan(loan));
             }
           }
@@ -229,10 +217,7 @@ class _LoanRow extends StatelessWidget {
     final isOverdue = next != null && loan.isMonthOverdue(next);
 
     final progressText = '${loan.paidCount}/${loan.tenureMonths} paid';
-
-    // Amount due for the next unpaid month (or 0 if fully paid).
-    final nextDueAmount =
-    next != null ? loan.amountForMonth(next) : 0.0;
+    final nextDueAmount = next != null ? loan.amountForMonth(next) : 0.0;
 
     final middleText = loan.isFullyPaid
         ? progressText
