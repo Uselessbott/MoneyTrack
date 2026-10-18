@@ -1,0 +1,60 @@
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+*.tmp
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.lock
+pubspec.lock
+
+# Android
+android/.gradle/
+android/captures/
+android/local.properties
+android/key.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/.idea/
+*.jks
+*.keystore
+*.p12
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/App.framework
+ios/Flutter/ephemeral/
+ios/Runner/GeneratedPluginRegistrant.*
+
+# Web
+web/.dart_tool/
+
+# Flutter launcher icons (generated — no need to commit)
+# Remove the # below if you want to commit generated mipmaps
+# android/app/src/main/res/mipmap-*/
+# android/app/src/main/res/drawable-*/
+
+# Auto-generated assets
+# assets/icon/*.png  # uncomment if you want to keep source PNGs out of git

@@ -1,0 +1,28 @@
+<!--
+Add the permission below directly under your <manifest> tag.
+
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+The flutter_local_notifications plugin already supplies POST_NOTIFICATIONS
+and VIBRATE. This app intentionally uses inexact scheduling, so it does NOT
+request SCHEDULE_EXACT_ALARM.
+-->
+
+<!--
+Add these receivers inside your <application> tag:
+
+<receiver
+    android:exported="false"
+    android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+
+<receiver
+    android:exported="false"
+    android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+        <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+    </intent-filter>
+</receiver>
+-->
